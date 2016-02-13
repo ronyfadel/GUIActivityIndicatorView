@@ -27,8 +27,8 @@ static NSString * const kGMAnimationKeyToValue             = @"toValue";
 static NSString * const kGMAnimationKeyBeginTime           = @"beginTime";
 static NSString * const kGMAnimationKeyDuration            = @"duration";
 
-static const CGFloat topZPosition    = 20.0;
-static const CGFloat bottomZPosition =  0.0;
+static const CGFloat topZPosition    = 1000.0;
+static const CGFloat bottomZPosition =    0.0;
 static const CFTimeInterval defaultAnimationDuration =  2.0;
 
 @implementation GUIActivityIndicatorView {
@@ -73,6 +73,17 @@ static const CFTimeInterval defaultAnimationDuration =  2.0;
         [self _commonInit];
     }
     return self;
+}
+
+- (void)layout
+{
+    [super layout];
+    [CATransaction begin];
+    [CATransaction setDisableActions:YES];
+    for (CALayer *layer in [self _layers]) {
+        [self _updateLayer:layer forNewViewSize:self.bounds.size];
+    }
+    [CATransaction commit];
 }
 
 - (void)_setAnimating:(BOOL)animating
@@ -187,22 +198,32 @@ static const CFTimeInterval defaultAnimationDuration =  2.0;
     return @[_layer1, _layer2, _layer3, _layer4];
 }
 
-- (CALayer *)_halfCircleLayerForSize:(CGSize)size {
+- (void)_updateMaskPathForLayer:(CALayer *)layer size:(CGSize)size
+{
     CGFloat radius = size.width / 2;
-    
-    CALayer *layer = [CALayer layer];
-    layer.frame = CGRectMake(0, 0, size.width, size.height);
-    
-    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
     
     CGMutablePathRef mutablePath = CGPathCreateMutable();
     CGPathMoveToPoint(mutablePath, NULL, 0, size.height / 2);
     CGPathAddArc(mutablePath, NULL, radius, radius, radius, 0, M_PI, false);
     
-    shapeLayer.path = mutablePath;
+    CAShapeLayer *mask = (CAShapeLayer *)layer.mask;
     
-    layer.mask = shapeLayer;
+    mask.path = mutablePath;
+}
+
+- (void)_updateLayer:(CALayer *)layer forNewViewSize:(CGSize)size
+{
+    layer.frame = CGRectMake(0, 0, size.width, size.height);
     layer.cornerRadius = size.width / 2;
+    [self _updateMaskPathForLayer:layer size:size];
+}
+
+- (CALayer *)_halfCircleLayerForSize:(CGSize)size {
+
+    CALayer *layer = [CALayer layer];
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    layer.mask = shapeLayer;
+    [self _updateLayer:layer forNewViewSize:size];
     
     return layer;
 }
