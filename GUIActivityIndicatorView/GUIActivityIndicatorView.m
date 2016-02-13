@@ -205,10 +205,11 @@ static const CFTimeInterval defaultAnimationDuration =  2.0;
     CGMutablePathRef mutablePath = CGPathCreateMutable();
     CGPathMoveToPoint(mutablePath, NULL, 0, size.height / 2);
     CGPathAddArc(mutablePath, NULL, radius, radius, radius, 0, M_PI, false);
-    
     CAShapeLayer *mask = (CAShapeLayer *)layer.mask;
     
     mask.path = mutablePath;
+
+    CGPathRelease(mutablePath);
 }
 
 - (void)_updateLayer:(CALayer *)layer forNewViewSize:(CGSize)size
