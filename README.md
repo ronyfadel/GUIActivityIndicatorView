@@ -2,11 +2,11 @@
 
 ## Demo
 
-![Demo](https://raw.githubusercontent.com/ronyfadel/GUIActivityIndicatorView/master/Demo.gif "Demo")
+![Demo](https://raw.githubusercontent.com/ronyfadel/GUIActivityIndicatorView/master/demo.gif "Demo")
 
 ## Usage
 
-- git clone https://github.com/ronyfadel/GUIActivityIndicatorView.git
+- `git clone https://github.com/ronyfadel/GUIActivityIndicatorView.git`
 - run example app
 
 ``` objc
@@ -17,13 +17,13 @@ GUIActivityIndicatorView *activityIndicatorView = [[GUIActivityIndicatorView all
 // To start animating
 [activityIndicatorView startAnimating];
 
-// To hide view when stopped
+// To hide the view when stopped
 activityIndicatorView.hidesWhenStopped = YES;
 
 // To stop animating
 [activityIndicatorView stopAnimating];
 
-// To check if view is animating or not
+// To check whether the view is animating or not
 activityIndicatorView.isAnimating;
 
 ```
